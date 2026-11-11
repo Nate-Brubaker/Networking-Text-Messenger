@@ -3,6 +3,10 @@ import threading
 import json
 clients = []
 
+#Type = message, close, startType, endType
+#timeStamp = time.time() UNIX
+
+
 def handle_client(client_socket, addr):
     try:
         while True:
@@ -15,12 +19,10 @@ def handle_client(client_socket, addr):
             except json.JSONDecodeError:
                 print("Invalid JSON received")
                 continue
+            print(f"Received: {request}")
             if request.get("closing"):
                 client_socket.sendall("close".encode("utf-8"))
                 break
-            print(f"Received: {request}")
-            #response = "accepted"
-            #client_socket.sendall(response.encode("utf-8"))
             for client in clients:
                 #if client != client_socket:
                 client.sendall(f"Message from {addr[0]}: {request.get('message')} at {request.get('timestamp')}".encode("utf-8"))

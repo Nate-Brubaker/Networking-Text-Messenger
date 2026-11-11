@@ -37,12 +37,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     while not disconnected.is_set():
         message = input("Enter a message (or 'close' to exit): ")
         data = {
+            "Type": "startType",
             "message": message,
-            "timestamp": 30,
-            "closing": False
+            "timestamp": ,
         }
         s.sendall(json.dumps(data).encode("utf-8"))
         if message.lower() == "close":
+            data["closing"] = True
+            s.sendall(json.dumps(data).encode("utf-8"))
             break
 
     receiver.join()

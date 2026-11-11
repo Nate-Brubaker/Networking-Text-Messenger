@@ -1,16 +1,21 @@
 import socket
 import threading
-
+import json
 clients = []
 
 def handle_client(client_socket, addr):
     try:
         while True:
-            data = client_socket.recv(1024)
-            if not data:
+            data_str = client_socket.recv(1024)
+            if not data_str:
                 break
-            request = data.decode("utf-8")
-            if request.lower() == "close":
+
+            try:
+                request = json.loads(data_str.decode("utf-8"))
+            except json.JSONDecodeError:
+                print("Invalid JSON received")
+                continue
+            if request.get("closing"):
                 client_socket.sendall("close".encode("utf-8"))
                 break
             print(f"Received: {request}")
@@ -18,7 +23,7 @@ def handle_client(client_socket, addr):
             #client_socket.sendall(response.encode("utf-8"))
             for client in clients:
                 #if client != client_socket:
-                client.sendall(f"Message from {addr[0]}: {request}".encode("utf-8"))
+                client.sendall(f"Message from {addr[0]}: {request.get('message')} at {request.get('timestamp')}".encode("utf-8"))
 
     except Exception as e:
         print(f"Error when handling client {addr[0]}: {e}")

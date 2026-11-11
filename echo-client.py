@@ -1,6 +1,7 @@
 
 import socket
 import threading
+import json
 
 HOST = "172.20.10.3"
 PORT = 65432
@@ -34,9 +35,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     receiver.start()
 
     while not disconnected.is_set():
-        text = input("Enter a message (or 'close' to exit): ")
-        s.sendall(text.encode("utf-8"))
-        if text.lower() == "close":
+        message = input("Enter a message (or 'close' to exit): ")
+        data = {
+            "message": message,
+            "timestamp": 30,
+            "closing": False
+        }
+        s.sendall(json.dumps(data).encode("utf-8"))
+        if message.lower() == "close":
             break
 
     receiver.join()

@@ -2,11 +2,13 @@
 import socket
 import threading
 import json
+from datetime import datetime
 
-HOST = "172.20.10.3"
+#HOST = "172.20.10.3"
+HOST = "10.42.159.253"
 PORT = 65432
 
-
+ 
 def receive_messages(sock, disconnected):
     while True:
         try:
@@ -39,7 +41,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         data = {
             "Type": "startType",
             "message": message,
-            "timestamp": ,
+            "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         s.sendall(json.dumps(data).encode("utf-8"))
         if message.lower() == "close":

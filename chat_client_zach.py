@@ -6,7 +6,7 @@ import tkinter as tk
 from datetime import datetime
 
 #HOST = "172.20.10.3"
-HOST = "10.42.159.253"
+HOST = "10.42.147.245"
 PORT = 65432
 
 TYPING_TIMEOUT_MS = 2000  # send "endType" after this long with no key presses
